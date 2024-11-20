@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 { margin-bottom: 1rem; }
+        
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #eee;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover { background: #ddd; }
+        .filter-btn.active { background: #007bff; color: white; }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover { transform: scale(1.05); }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Photo Gallery</h1>
+            <div class="filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="nature">Nature</button>
+                <button class="filter-btn" data-category="urban">Urban</button>
+                <button class="filter-btn" data-category="portrait">Ocean</button>
+            </div>
+        </header>
+
+        <div class="gallery">
+            <div class="gallery-item" data-category="nature">
+                <img src="https://media.istockphoto.com/id/485371557/photo/twilight-at-spirit-island.jpg?s=612x612&w=0&k=20&c=FSGliJ4EKFP70Yjpzso0HfRR4WwflC6GKfl4F3Hj7fk=" alt="Nature 1">
+            </div>
+            <div class="gallery-item" data-category="urban">
+                <img src="https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2017/03/leannecole-7-tips-urbanlandscapes42.jpg?fit=750%2C500&ssl=1" alt="Urban 1">
+            </div>
+            <div class="gallery-item" data-category="nature">
+                <img src="https://www.jessleephotos.com/images/640/typsp1-1740.jpg" alt="Nature 2">
+            </div>
+            <div class="gallery-item" data-category="portrait">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAMjliaHuzQEiqayCaNP78ibvQKocJEvp1lg&s" alt="Portrait 1">
+            </div>
+            <div class="gallery-item" data-category="urban">
+                <img src="https://cdn.contrastly.com/wp-content/uploads/urban-landscape-1.jpg" alt="Urban 2">
+            </div>
+            <div class="gallery-item" data-category="portrait">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU4bUYtMhXqM_zV8xib64yHgUegNHF03yC9Q&s" alt="Portrait 2">
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox">
+        <span class="close-btn">&times;</span>
+        <img src="" alt="Lightbox Image">
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Filter functionality
+            $('.filter-btn').click(function() {
+                $('.filter-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                const category = $(this).data('category');
+                
+                if (category === 'all') {
+                    $('.gallery-item').fadeIn();
+                } else {
+                    $('.gallery-item').hide();
+                    $(`.gallery-item[data-category="${category}"]`).fadeIn();
+                }
+            });
+
+            // Lightbox functionality
+            $('.gallery-item').click(function() {
+                const imgSrc = $(this).find('img').attr('src');
+                const imgAlt = $(this).find('img').attr('alt');
+                
+                $('.lightbox img').attr({
+                    'src': imgSrc,
+                    'alt': imgAlt
+                });
+                
+                $('.lightbox').fadeIn().css('display', 'flex');
+            });
+
+            $('.close-btn, .lightbox').click(function(e) {
+                if (e.target !== $('.lightbox img')[0]) {
+                    $('.lightbox').fadeOut();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
